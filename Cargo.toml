@@ -1,0 +1,8 @@
+[package]
+name = "rust-euler"
+version = "0.1.0"
+authors = ["Michael Lancaster <mjl152@uclive.ac.nz>"]
+
+[dependencies.num]
+version = "0.1.25"
+default-features = false

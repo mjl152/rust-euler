@@ -4,7 +4,7 @@ extern crate num;
 // Find sum of all multiples of 3 or 5 below 1000
 // 
 fn main() {
-	problem_2();
+	problem_1();
 }
 
 fn problem_1() {
@@ -15,10 +15,7 @@ fn problem_1() {
 	for i in num::range_step(5, 1000, 5) {
 		multiples.insert(i);
 	}
-	let mut sum = 0;
-	for multiple in &multiples {
-		sum = sum + multiple;
-	}
+	let sum = multiples.iter().fold(0, |sum, x| sum + x);
 	println!("{}", sum);	
 }
 
@@ -46,5 +43,4 @@ fn problem_2() {
 		}
 	}
 	println!("{}", sum)
-
 }

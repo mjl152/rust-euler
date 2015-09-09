@@ -23,14 +23,13 @@ struct Args {
 	flag_help: bool,
 }
 
-// Find sum of all multiples of 3 or 5 below 1000
-// 
 fn main() {
 	let args: Args = Docopt::new(USAGE).and_then(|d| d.decode())
 									   .unwrap_or_else(|e| e.exit());
 	match args.flag_problem {
 		1 => problem_1(),
 		2 => problem_2(),
+		3 => problem_3(),
 		_ => println!("Problem number solution not supported.")
 	}
 }
@@ -48,14 +47,6 @@ fn problem_1() {
 }
 
 fn problem_2() {
-	// Odd + Odd = Even
-	// Even + Odd = Odd
-	// Odd + Even = Odd
-	// Even + Even = Even
-	// 0, 1, 2, 3, 5, 8, 13, 21 ...
-	//    Odd Even Odd Odd Even Odd Odd ...
-	// We know that every 3rd Fibonacci number is even
-	// so calculate every 3rd Fibonacci number and sum
 	let mut current = 2;
 	let mut previous = 1;
 	let mut n = 0;
@@ -71,4 +62,30 @@ fn problem_2() {
 		}
 	}
 	println!("{}", sum)
+}
+
+fn is_prime(x: u64) -> bool {
+	let mut i = 2;
+	while i < (x / 2) {
+		if x % i == 0 {
+			return false;
+		}
+		i += 1;
+	}
+	return true;
+}
+
+fn problem_3() {
+	 let a : u64 = 600851475143;
+	 let mut d = 2;
+	 while d < (a / 2) {
+	 	// Check that the result is an integer
+	 	if a % d == 0 {
+	 		match is_prime(a / d) {
+	 			true => {println!("{}", a/d); return;},
+	 			false => {}
+	 		}
+	 	}
+	 	d += 1;
+	 }
 }

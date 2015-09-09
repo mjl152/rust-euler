@@ -1,5 +1,5 @@
 [root]
-name = "rust-euler"
+name = "rust_euler"
 version = "0.1.0"
 dependencies = [
  "docopt 0.6.72 (registry+https://github.com/rust-lang/crates.io-index)",

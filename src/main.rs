@@ -1,6 +1,7 @@
 extern crate rustc_serialize;
 extern crate docopt;
 extern crate num;
+extern crate time;
 
 use std::collections::HashSet;
 use docopt::Docopt;
@@ -13,9 +14,9 @@ Rust implementations of the Project Euler problems.
 Usage: rust-euler [options]
 
 Options:
-	-p, --problem=K    Which Project Euler problem to solve [default: 1]
-	-h, --help         Display this help and exit
-	-b, --bench        Benchmark the specified problem
+	-p, --problem=K     Which Project Euler problem to solve [default: 1]
+	-h, --help          Display this help and exit
+	-b, --bench         Benchmark the specified problem
 ";
 
 const DEFAULT_RETURN: &'static str = "The problem solution algorithm completed. The reported answer is: ";
@@ -32,15 +33,29 @@ fn main() {
 	let args: Args = Docopt::new(USAGE).and_then(|d| d.decode())
 									   .unwrap_or_else(|e| e.exit());
 	let mut problem : fn() -> (u64, &'static str);
+	let mut iterations = 30;
+	let mut function_result : (u64, &'static str);
 	match args.flag_problem {
 		1 => problem = problem_1,
 		2 => problem = problem_2,
 		3 => problem = problem_3,
 		_ => problem = problem_not_supported,
 	}
-	let (result, message) = problem();
-	println!("{}", message);
-	println!("{}", result);
+	if args.flag_bench == false {
+		iterations = 1;
+	}
+	function_result = problem();
+	let start = time::precise_time_ns();
+	for i in 0..iterations {
+		function_result = problem();
+	}
+	let stop = time::precise_time_ns();
+	let time_taken : f64 = ((stop - start) as f64) / (iterations as f64) / 1000000000.0;
+	println!("{}", function_result.1);
+	println!("{}", function_result.0);
+	if args.flag_bench {
+		println!("Took {} s / iteration.", time_taken)
+	}
 }
 
 fn problem_1() -> (u64, &'static str) {

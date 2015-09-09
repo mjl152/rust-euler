@@ -26,15 +26,19 @@ struct Args {
 fn main() {
 	let args: Args = Docopt::new(USAGE).and_then(|d| d.decode())
 									   .unwrap_or_else(|e| e.exit());
+	let mut problem : fn() -> (u64, String);
 	match args.flag_problem {
-		1 => problem_1(),
-		2 => problem_2(),
-		3 => problem_3(),
-		_ => println!("Problem number solution not supported.")
+		1 => problem = problem_1,
+		2 => problem = problem_2,
+		3 => problem = problem_3,
+		_ => problem = problem_not_supported,
 	}
+	let (result, message) = problem();
+	println!("{}", message);
+	println!("{}", result);
 }
 
-fn problem_1() {
+fn problem_1() -> (u64, String) {
 	let mut multiples = HashSet::new();
 	for i in num::range_step(3, 1000, 3) {
 		multiples.insert(i);
@@ -43,10 +47,10 @@ fn problem_1() {
 		multiples.insert(i);
 	}
 	let sum = multiples.iter().fold(0, |sum, x| sum + x);
-	println!("{}", sum);	
+	return (sum, "".to_string());	
 }
 
-fn problem_2() {
+fn problem_2() -> (u64, String) {
 	let mut current = 2;
 	let mut previous = 1;
 	let mut n = 0;
@@ -61,8 +65,17 @@ fn problem_2() {
 			n = 0;
 		}
 	}
-	println!("{}", sum)
+	return (sum, "".to_string());
 }
+
+/* A number is prime if it is divisble by no numbers other than 2 or itself.
+   Our naive prime checking function performs this check.
+   However we know that if a number x is not divisble by a number i
+   it is not divisible by any multiples of i.
+   So really the check to see if a number is prime is to divide by all primes
+   less than that number.
+
+*/
 
 fn is_prime(x: u64) -> bool {
 	let mut i = 2;
@@ -75,17 +88,22 @@ fn is_prime(x: u64) -> bool {
 	return true;
 }
 
-fn problem_3() {
+fn problem_3() -> (u64, String) {
 	 let a : u64 = 600851475143;
 	 let mut d = 2;
 	 while d < (a / 2) {
 	 	// Check that the result is an integer
 	 	if a % d == 0 {
 	 		match is_prime(a / d) {
-	 			true => {println!("{}", a/d); return;},
+	 			true => {return (a / d, "".to_string());},
 	 			false => {}
 	 		}
 	 	}
 	 	d += 1;
 	 }
+	 return (a, "Failed to find any prime factors - the number must be prime.".to_string())
+}
+
+fn problem_not_supported() -> (u64, String) {
+	return (0, "Problem number solution not supported".to_string());
 }

@@ -1,10 +1,38 @@
-use std::collections::HashSet;
+extern crate rustc_serialize;
+extern crate docopt;
 extern crate num;
+
+use std::collections::HashSet;
+use docopt::Docopt;
+
+const USAGE: &'static str = "
+rust-euler
+
+Rust implementations of the Project Euler problems.
+
+Usage: rust-euler [options]
+
+Options:
+	-p, --problem=K    Which Project Euler problem to solve [default: 1]
+	-h, --help         Display this help and exit
+";
+
+#[derive(Debug, RustcDecodable)]
+struct Args {
+	flag_problem: u8,
+	flag_help: bool,
+}
 
 // Find sum of all multiples of 3 or 5 below 1000
 // 
 fn main() {
-	problem_1();
+	let args: Args = Docopt::new(USAGE).and_then(|d| d.decode())
+									   .unwrap_or_else(|e| e.exit());
+	match args.flag_problem {
+		1 => problem_1(),
+		2 => problem_2(),
+		_ => println!("Problem number solution not supported.")
+	}
 }
 
 fn problem_1() {

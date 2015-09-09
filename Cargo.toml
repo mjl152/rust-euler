@@ -6,3 +6,7 @@ authors = ["Michael Lancaster <mjl152@uclive.ac.nz>"]
 [dependencies.num]
 version = "0.1.25"
 default-features = false
+
+[dependencies]
+docopt = "0.6"
+rustc-serialize = "0.3"  # if you're using `derive(RustcDecodable)`

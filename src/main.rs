@@ -15,18 +15,23 @@ Usage: rust-euler [options]
 Options:
 	-p, --problem=K    Which Project Euler problem to solve [default: 1]
 	-h, --help         Display this help and exit
+	-b, --bench        Benchmark the specified problem
 ";
+
+const DEFAULT_RETURN: &'static str = "The problem solution algorithm completed. The reported answer is: ";
+const ERROR_PROBLEM_NOT_IMPL: &'static str = "Problem number solution not supported";
 
 #[derive(Debug, RustcDecodable)]
 struct Args {
 	flag_problem: u8,
 	flag_help: bool,
+	flag_bench: bool,
 }
 
 fn main() {
 	let args: Args = Docopt::new(USAGE).and_then(|d| d.decode())
 									   .unwrap_or_else(|e| e.exit());
-	let mut problem : fn() -> (u64, String);
+	let mut problem : fn() -> (u64, &'static str);
 	match args.flag_problem {
 		1 => problem = problem_1,
 		2 => problem = problem_2,
@@ -38,7 +43,7 @@ fn main() {
 	println!("{}", result);
 }
 
-fn problem_1() -> (u64, String) {
+fn problem_1() -> (u64, &'static str) {
 	let mut multiples = HashSet::new();
 	for i in num::range_step(3, 1000, 3) {
 		multiples.insert(i);
@@ -47,10 +52,10 @@ fn problem_1() -> (u64, String) {
 		multiples.insert(i);
 	}
 	let sum = multiples.iter().fold(0, |sum, x| sum + x);
-	return (sum, "".to_string());	
+	return (sum, DEFAULT_RETURN);	
 }
 
-fn problem_2() -> (u64, String) {
+fn problem_2() -> (u64, &'static str) {
 	let mut current = 2;
 	let mut previous = 1;
 	let mut n = 0;
@@ -65,7 +70,7 @@ fn problem_2() -> (u64, String) {
 			n = 0;
 		}
 	}
-	return (sum, "".to_string());
+	return (sum, DEFAULT_RETURN);
 }
 
 /* A number is prime if it is divisble by no numbers other than 2 or itself.
@@ -74,10 +79,9 @@ fn problem_2() -> (u64, String) {
    it is not divisible by any multiples of i.
    So really the check to see if a number is prime is to divide by all primes
    less than that number.
-
 */
 
-fn is_prime(x: u64) -> bool {
+fn is_prime(x : u64) -> bool {
 	let mut i = 2;
 	while i < (x / 2) {
 		if x % i == 0 {
@@ -88,22 +92,22 @@ fn is_prime(x: u64) -> bool {
 	return true;
 }
 
-fn problem_3() -> (u64, String) {
+fn problem_3() -> (u64, &'static str) {
 	 let a : u64 = 600851475143;
 	 let mut d = 2;
 	 while d < (a / 2) {
 	 	// Check that the result is an integer
 	 	if a % d == 0 {
 	 		match is_prime(a / d) {
-	 			true => {return (a / d, "".to_string());},
+	 			true => {return (a / d, DEFAULT_RETURN);},
 	 			false => {}
 	 		}
 	 	}
 	 	d += 1;
 	 }
-	 return (a, "Failed to find any prime factors - the number must be prime.".to_string())
+	 return (a, DEFAULT_RETURN);
 }
 
-fn problem_not_supported() -> (u64, String) {
-	return (0, "Problem number solution not supported".to_string());
+fn problem_not_supported() -> (u64, &'static str) {
+	return (0, ERROR_PROBLEM_NOT_IMPL);
 }

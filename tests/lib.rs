@@ -4,14 +4,23 @@ mod tests {
     use rust_euler::rust_euler;
     #[test]
     fn function_1() {
-        assert_eq!(233168, rust_euler::problem_1().0);
+        match rust_euler::problem_1() {
+            Some (x) => assert_eq!(x, 233168),
+            None     => assert!(false),
+        }
     }
     #[test]
     fn function_2() {
-        assert_eq!(4613732, rust_euler::problem_2().0);
+        match rust_euler::problem_2() {
+            Some (x) => assert_eq!(x, 4613732),
+            None     => assert!(false),
+        }
     }
     #[test]
     fn function_3() {
-        assert_eq!(6857, rust_euler::problem_3().0);
+        match rust_euler::problem_3() {
+            Some (x) => assert_eq!(x, 6857),
+            None     => assert!(false),
+        }
     }
 }

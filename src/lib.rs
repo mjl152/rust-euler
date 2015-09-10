@@ -4,10 +4,7 @@ pub mod rust_euler {
 
 	use std::collections::HashSet;
 
-	const DEFAULT_RETURN: &'static str = "The problem solution algorithm completed. The reported answer is: ";
-	const ERROR_PROBLEM_NOT_IMPL: &'static str = "Problem number solution not supported";
-
-	pub fn problem_1() -> (u64, &'static str) {
+	pub fn problem_1() -> Option<u64> {
 		let mut multiples = HashSet::new();
 		for i in num::range_step(3, 1000, 3) {
 			multiples.insert(i);
@@ -16,10 +13,10 @@ pub mod rust_euler {
 			multiples.insert(i);
 		}
 		let sum = multiples.iter().fold(0, |sum, x| sum + x);
-		return (sum, DEFAULT_RETURN);	
+		return Some (sum);
 	}
 
-	pub fn problem_2() -> (u64, &'static str) {
+	pub fn problem_2() -> Option<u64> {
 		let mut current = 2;
 		let mut previous = 1;
 		let mut n = 0;
@@ -34,7 +31,7 @@ pub mod rust_euler {
 				n = 0;
 			}
 		}
-		return (sum, DEFAULT_RETURN);
+		return Some (sum);
 	}
 
 	/* A number is prime if it is divisble by no numbers other than 2 or itself.
@@ -56,23 +53,23 @@ pub mod rust_euler {
 		return true;
 	}
 
-	pub fn problem_3() -> (u64, &'static str) {
+	pub fn problem_3() -> Option<u64> {
 		 let a : u64 = 600851475143;
 		 let mut d = 2;
 		 while d < (a / 2) {
 		 	// Check that the result is an integer
 		 	if a % d == 0 {
 		 		match is_prime(a / d) {
-		 			true => {return (a / d, DEFAULT_RETURN);},
+		 			true => return Some(a / d),
 		 			false => {}
 		 		}
 		 	}
 		 	d += 1;
 		 }
-		 return (a, DEFAULT_RETURN);
+		 return None;
 	}
 
-	pub fn problem_not_supported() -> (u64, &'static str) {
-		return (0, ERROR_PROBLEM_NOT_IMPL);
+	pub fn problem_not_supported() -> Option<u64> {
+		return None;
 	}
 }

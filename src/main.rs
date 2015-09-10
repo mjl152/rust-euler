@@ -24,13 +24,15 @@ struct Args {
 	flag_bench: bool,
 }
 
+const ERROR_PROBLEM_NOT_IMPL: &'static str = "Problem number solution not supported";
+
 fn main() {
 	use rust_euler::rust_euler;
 	let args: Args = docopt::Docopt::new(USAGE).and_then(|d| d.decode())
 									   .unwrap_or_else(|e| e.exit());
-	let mut problem : fn() -> (u64, &'static str);
+	let mut problem : fn() -> Option<u64>;
 	let mut iterations = 30;
-	let mut function_result : (u64, &'static str);
+	let mut function_result : Option<u64>;
 	match args.flag_problem {
 		1 => problem = rust_euler::problem_1,
 		2 => problem = rust_euler::problem_2,
@@ -47,8 +49,10 @@ fn main() {
 	}
 	let stop = time::precise_time_ns();
 	let time_taken : f64 = ((stop - start) as f64) / (iterations as f64) / 1000000000.0;
-	println!("{}", function_result.1);
-	println!("{}", function_result.0);
+	match function_result {
+		Some (r) => println!("{}", r),
+		None     => println!("{}", ERROR_PROBLEM_NOT_IMPL),
+	}
 	if args.flag_bench {
 		println!("Took {} s / iteration.", time_taken)
 	}
